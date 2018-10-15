@@ -2,7 +2,7 @@
 #include <eosiolib/print.hpp>
 using namespace eosio;
 
-// Smart Contract Name: notechain
+// Smart Contract Name: africonnect
 // Table struct:
 //   notestruct: multi index table to store the notes
 //     prim_key(uint64): primary key
@@ -15,7 +15,7 @@ using namespace eosio;
 //   update => put the note into the multi-index table and sign by the given account
 
 // Replace the contract class name when you start your own project
-class notechain : public eosio::contract {
+class africonnect : public eosio::contract {
   private:
     bool isnewuser( account_name user ) {
       notetable noteobj(_self, _self);
@@ -78,4 +78,4 @@ class notechain : public eosio::contract {
 };
 
 // specify the contract name, and export a public action: update
-EOSIO_ABI( notechain, (update) )
+EOSIO_ABI( africonnect, (update) )
