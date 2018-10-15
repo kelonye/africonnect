@@ -33,7 +33,7 @@ class Component extends React.Component {
         <AppBar position="static" color="default">
           <Toolbar>
             <Typography variant="title" color="inherit">
-              Africonnect
+              Zebra
             </Typography>
           </Toolbar>
         </AppBar>
