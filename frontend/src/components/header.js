@@ -15,6 +15,7 @@ import MenuList from '@material-ui/core/MenuList';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import IconButton from '@material-ui/core/IconButton';
 import UserIcon from '@material-ui/icons/Person';
+import SearchIcon from '@material-ui/icons/Search';
 
 const styles = theme => ({
   grow: {
@@ -68,6 +69,9 @@ class Component extends React.Component {
     const { account, logout, classes } = this.props;
     return (
       <div>
+        <IconButton>
+          <SearchIcon />
+        </IconButton>
         <IconButton
           buttonRef={node => {
             this.anchorEl = node;

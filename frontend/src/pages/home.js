@@ -7,6 +7,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
+import { Link } from 'react-router-dom';
 
 const styles = theme => ({
   heroUnit: {
@@ -49,14 +50,18 @@ class Component extends React.Component {
           <div className={classes.heroButtons}>
             <Grid container spacing={16} justify="center">
               <Grid item>
-                <Button variant="contained" color="primary">
-                  REGISTER BUSINESS
-                </Button>
+                <Link to="/register">
+                  <Button variant="contained" color="primary">
+                    REGISTER BUSINESS
+                  </Button>
+                </Link>
               </Grid>
               <Grid item>
-                <Button variant="outlined" color="primary">
-                  DISCOVER COMPANIES
-                </Button>
+                <Link to="/discover">
+                  <Button variant="outlined" color="primary">
+                    DISCOVER COMPANIES
+                  </Button>
+                </Link>
               </Grid>
             </Grid>
           </div>
