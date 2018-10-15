@@ -4,24 +4,18 @@ import { connect } from 'react-redux';
 import * as mapDispatchToProps from 'actions';
 
 import { withStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
 import Header from 'components/header';
+import Home from 'pages/home';
+import theme from 'theme';
 
-const styles = theme => ({
-  paper: {
-    ...theme.mixins.gutters(),
-    paddingTop: theme.spacing.unit * 2,
-    paddingBottom: theme.spacing.unit * 2
-  }
-});
+const styles = theme => ({});
 
 class Component extends React.Component {
   render() {
-    const { classes } = this.props;
     return (
       <div>
         <Header />
-        <Paper className={classes.paper} />
+        <Home />
       </div>
     );
   }
@@ -38,4 +32,4 @@ const mapStateToProps = () => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(withStyles(styles)(Component));
+)(theme(withStyles(styles)(Component)));

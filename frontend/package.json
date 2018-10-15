@@ -3,7 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@material-ui/core": "^1.5.1",
+    "@material-ui/core": "3.2.1",
+    "@material-ui/icons": "^3.0.1",
+    "babel-preset-react-app": "1.0.0",
     "bluebird": "^3.5.2",
     "eosjs": "20.0.0-beta1",
     "eslint": "3.8.1",
@@ -24,6 +26,14 @@
     "redux": "^4.0.1",
     "redux-thunk": "^2.3.0",
     "text-encoding": "^0.7.0"
+  },
+  "babel": {
+    "presets": [
+      "react-app"
+    ]
+  },
+  "eslintConfig": {
+    "extends": "react-app"
   },
   "scripts": {
     "start": "NODE_PATH=$NODE_PATH:./src react-scripts start",

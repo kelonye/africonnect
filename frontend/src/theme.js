@@ -13,6 +13,9 @@ const theme = createMuiTheme({
       // Darken so we reach the AA contrast ratio level.
       main: darken(pink.A400, 0.08)
     }
+  },
+  typography: {
+    useNextVariants: true
   }
 });
 
