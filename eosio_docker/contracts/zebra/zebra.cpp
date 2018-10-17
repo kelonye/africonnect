@@ -20,7 +20,6 @@ class zebra : public eosio::contract {
       account_name get_by_owner() const { return owner; }
     };
 
-    // create a multi-index table and support secondary key
     typedef eosio::multi_index< N(business), business > business_table;
 
     /// @abi table
@@ -29,14 +28,32 @@ class zebra : public eosio::contract {
       account_name  owner;      // the group owner
       std::string   name;      // the name of the group
       std::vector<uint8_t>   members; // the businesses in the group
+      // uint8_t reputation;
       uint64_t      timestamp; // the store the last update block time
 
       // primary key
       auto primary_key() const { return prim_key; }
     };
 
-    // create a multi-index table and support secondary key
     typedef eosio::multi_index< N(group), group > group_table;
+
+    /// @abi table
+    struct order {
+      uint64_t      prim_key;  // primary key
+      account_name  owner;      // the order owner
+      uint64_t       business;
+      uint8_t       variety;      // enum [Bacon = 0, Fuerte, Gwen, Hass, Lamb Hass, Pinkerton, Reed, Zutano]
+      uint64_t      quantity;
+      uint64_t      budget_unit_price;
+      std::string      delivery_physical_address;
+      std::string      note;
+      uint64_t      timestamp; // the store the last update block time
+
+      // primary key
+      auto primary_key() const { return prim_key; }
+    };
+
+    typedef eosio::multi_index< N(order), order > order_table;
 
   public:
     using contract::contract;
@@ -89,6 +106,34 @@ class zebra : public eosio::contract {
         address.timestamp   = now();
       });
     }
+
+    /// @abi action
+    void createorder(
+      account_name _owner,
+      uint64_t& _business,
+      uint8_t& _variety,
+      uint64_t& _quantity,
+      uint64_t& _budget_unit_price,
+      std::string& _delivery_physical_address,
+      std::string& _note
+    ) {
+      // to sign the action with the given account
+      require_auth( _owner );
+
+      order_table obj(_self, _self); // code, scope
+
+      obj.emplace( _self, [&]( auto& address ) {
+        address.prim_key    = obj.available_primary_key();
+        address.owner       = _owner;
+        address.business    = _business;
+        address.variety     = _variety;
+        address.quantity    = _quantity;
+        address.budget_unit_price = _budget_unit_price;
+        address.delivery_physical_address = _delivery_physical_address;
+        address.note = _note;
+        address.timestamp   = now();
+      });
+    }
 };
 
-EOSIO_ABI( zebra, (addbusiness)(addgroup)(updategroup) )
+EOSIO_ABI( zebra, (addbusiness)(addgroup)(updategroup)(createorder) )

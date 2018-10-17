@@ -7,6 +7,7 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import SearchIcon from '@material-ui/icons/Search';
+import { Link } from 'react-router-dom';
 
 import { USER } from 'eos';
 
@@ -40,6 +41,18 @@ class Component extends React.Component {
           <IconButton>
             <SearchIcon />
           </IconButton>
+          <Link to="/buy">
+            <Button variant="contained" color="primary">
+              BUY
+            </Button>
+          </Link>
+          &nbsp;
+          <Link to="/sell">
+            <Button variant="outlined" color="primary">
+              SELL
+            </Button>
+          </Link>
+          &nbsp;
           <Button color="inherit" variant="outlined" size="small">
             {USER.name}
           </Button>
