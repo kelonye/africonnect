@@ -17,6 +17,7 @@
     "eslint-plugin-jsx-a11y": "2.2.3",
     "eslint-plugin-prettier": "^2.6.1",
     "eslint-plugin-react": "6.4.1",
+    "lodash": "^4.17.11",
     "prettier": "^1.14.2",
     "prop-types": "^15.6.2",
     "react": "^16.4.2",

@@ -1,5 +1,6 @@
 #include <eosiolib/eosio.hpp>
 #include <eosiolib/print.hpp>
+#include <vector>
 using namespace eosio;
 
 // Smart Contract Name: zebra
@@ -20,9 +21,22 @@ class zebra : public eosio::contract {
     };
 
     // create a multi-index table and support secondary key
-    typedef eosio::multi_index< N(business), business,
-      indexed_by< N(getbyowner), const_mem_fun<business, account_name, &business::get_by_owner> >
-      > business_table;
+    typedef eosio::multi_index< N(business), business > business_table;
+
+    /// @abi table
+    struct group {
+      uint64_t      prim_key;  // primary key
+      account_name  owner;      // the group owner
+      std::string   name;      // the name of the group
+      std::vector<uint8_t>   members; // the businesses in the group
+      uint64_t      timestamp; // the store the last update block time
+
+      // primary key
+      auto primary_key() const { return prim_key; }
+    };
+
+    // create a multi-index table and support secondary key
+    typedef eosio::multi_index< N(group), group > group_table;
 
   public:
     using contract::contract;
@@ -43,6 +57,38 @@ class zebra : public eosio::contract {
       });
     }
 
+    /// @abi action
+    void addgroup( account_name _owner, std::string& _name, std::vector<uint8_t>& _members ) {
+      // to sign the action with the given account
+      require_auth( _owner );
+
+      group_table obj(_self, _self); // code, scope
+
+      obj.emplace( _self, [&]( auto& address ) {
+        address.prim_key    = obj.available_primary_key();
+        address.owner       = _owner;
+        address.name        = _name;
+        address.members     = _members;
+        address.timestamp   = now();
+      });
+    }
+
+    /// @abi action
+    void updategroup( account_name _owner, uint64_t& _id, std::string& _name, std::vector<uint8_t>& _members ) {
+      // to sign the action with the given account
+      require_auth( _owner );
+
+      group_table obj(_self, _self); // code, scope
+
+      auto itr = obj.find( _id );
+      eosio_assert(itr != obj.end(), "group doesn't exists");
+
+      obj.modify(itr, itr->prim_key, [&]( auto& address ) {
+        address.name        = _name;
+        address.members     = _members;
+        address.timestamp   = now();
+      });
+    }
 };
 
-EOSIO_ABI( zebra, (addbusiness) )
+EOSIO_ABI( zebra, (addbusiness)(addgroup)(updategroup) )

@@ -1,4 +1,5 @@
 import React from 'react';
+import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { USER, getRows } from 'eos';
 
@@ -18,6 +19,11 @@ class Component extends React.Component {
     getRows('business').then(data => {
       const businesses = data.filter(b => b.owner === USER.name);
       this.setState({ businesses });
+
+      getRows('group').then(data => {
+        const groups = data.filter(g => _.uniqBy(g.members, businesses));
+        this.setState({ groups });
+      });
     });
   }
 
