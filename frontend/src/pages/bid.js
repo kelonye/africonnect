@@ -10,6 +10,7 @@ import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import withStyles from '@material-ui/core/styles/withStyles';
 import { myGroupsSelector, getOrderByKey } from 'selectors';
+import Money from 'components/money';
 
 const styles = theme => ({
   paper: {
@@ -41,22 +42,23 @@ class Component extends React.Component {
     event.preventDefault();
 
     const _group = event.target.group.value;
-    const _unit_price = event.target.unit_price.value;
+    const _unit_price = Math.round(Number(event.target.unit_price.value) * 100);
     const { history, getBids } = this.props;
     const _order = Number(this.props.match.params.id);
-
-    console.log(USER.name, _order, _group, _unit_price);
-
-    pushAction('createbid', {
+    const data = {
       _owner: USER.name,
       _order,
       _group,
       _unit_price
-    })
+    };
+
+    console.log(data);
+
+    pushAction('createbid', data)
       .then(getBids)
       .then(() => {
         history.replace({
-          pathname: '/buy'
+          pathname: '/sell'
         });
       });
   }
@@ -71,13 +73,15 @@ class Component extends React.Component {
           <div>
             <h4 style={{ margin: 0 }}>
               Bid on Order: variety(
-              {order.variety.name}
-              ), unit price($
-              {order.budget_unit_price}
-              ), total($
-              {order.total_cost})
+              {order.varietyName}
+              ), unit price(
+              <Money money={order.budget_unit_price} />
+              ), total(
+              <Money money={order.total_cost} />)
             </h4>
-            <h5 style={{ margin: 0 }}>Requested by: {order.business.name}</h5>
+            <h5 style={{ margin: 0 }}>
+              Requested by: {order.businessObj.name}
+            </h5>
           </div>
         )}
 

@@ -38,21 +38,13 @@ class Component extends React.Component {
     const _business = event.target.business.value;
     const _variety = event.target.variety.value;
     const _quantity = Number(event.target.quantity.value);
-    const _budget_unit_price = Number(event.target.budget_unit_price.value);
+    const _budget_unit_price = Math.round(
+      Number(event.target.budget_unit_price.value) * 100
+    );
     const _delivery_physical_address = event.target.address.value;
     const _note = event.target.note.value;
     const { history, getOrders } = this.props;
-
-    // console.log(
-    //   _business,
-    //   _variety,
-    //   _quantity,
-    //   _budget_unit_price,
-    //   _delivery_physical_address,
-    //   _note
-    // );
-
-    pushAction('createorder', {
+    const data = {
       _owner: USER.name,
       _business,
       _variety,
@@ -60,7 +52,11 @@ class Component extends React.Component {
       _budget_unit_price,
       _delivery_physical_address,
       _note
-    })
+    };
+
+    console.log(data);
+
+    pushAction('createorder', data)
       .then(getOrders)
       .then(() => {
         history.replace({

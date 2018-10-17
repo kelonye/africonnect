@@ -2,60 +2,51 @@ import React from 'react';
 import { connect } from 'react-redux';
 import * as mapDispatchToProps from 'actions';
 import { withStyles } from '@material-ui/core/styles';
-import { getOrderByKey, getOrderBids, bidsMapSelector } from 'selectors';
+import {
+  getOrderByKey,
+  getBidByKey,
+  bidsMapSelector,
+  ordersMapSelector,
+  getGroupBusinesses
+} from 'selectors';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import Button from '@material-ui/core/Button';
+import Money from 'components/money';
 
 const styles = theme => ({});
 
 class Component extends React.Component {
   render() {
-    const { classes, order, bids } = this.props;
-    if (!(order && order.business)) return null;
+    const { classes, order, bid, businesses } = this.props;
+    if (!(bid && order)) return null;
     return (
       <div>
         <div>
           <h4 style={{ margin: 0 }}>Order #{order.prim_key}</h4>
           <h5 style={{ margin: 0 }}>
-            You can accept the below bids made to this order:
+            The below is a breakdown of the delivery status of the members
+            participating in this order:
           </h5>
         </div>
-        <br />
-        <div>Business: {order.business.name}</div>
-        <div>Quantity: {order.quantity}</div>
-        <div>Variety: {order.variety.name}</div>
-        <div>Budget Unit Price: ${order.budget_unit_price}</div>
-        <div>Total Cost: ${order.total_cost}</div>
-        <br />
-        <div>Bids:</div>
         <div>
           <Table className={classes.table}>
             <TableHead>
               <TableRow>
-                <TableCell>Group</TableCell>
-                <TableCell>Reputation</TableCell>
-                <TableCell>Unit Price</TableCell>
-                <TableCell>Total Price</TableCell>
-                <TableCell>Cost Difference</TableCell>
+                <TableCell>Business</TableCell>
+                <TableCell>Payment</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {bids.map(row => (
+              {businesses.map(row => (
                 <TableRow key={row.prim_key}>
                   <TableCell component="th" scope="row">
-                    {row.group.name}
+                    {row.name}
                   </TableCell>
                   <TableCell numeric>
-                    {Math.round(10 * Math.random())}
-                  </TableCell>
-                  <TableCell numeric>${row.unit_price}</TableCell>
-                  <TableCell numeric>${row.total_cost}</TableCell>
-                  <TableCell numeric>
-                    ${row.total_cost - order.total_cost}
+                    <Money money={bid.total_cost / businesses.length} />
                   </TableCell>
                 </TableRow>
               ))}
@@ -68,11 +59,20 @@ class Component extends React.Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const orderId = Number(ownProps.match.params.id);
+  const bidId = Number(ownProps.match.params.id);
+  const bid = getBidByKey(bidId);
+  let order;
+  let businesses = [];
+  if (bid && bid.orderObj && bid.groupObj) {
+    order = getOrderByKey(bid.orderObj.prim_key);
+    businesses = getGroupBusinesses(bid.groupObj);
+  }
   return {
-    order: getOrderByKey(orderId),
-    bids: getOrderBids(orderId),
-    bidsMap: bidsMapSelector(state)
+    order,
+    bid,
+    bidsMap: bidsMapSelector(state),
+    ordersMap: ordersMapSelector(state),
+    businesses
   };
 };
 

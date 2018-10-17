@@ -38,7 +38,7 @@ class zebra : public eosio::contract {
     typedef eosio::multi_index< N(group), group > group_table;
 
     /// @abi table
-    struct order {
+    struct order2 {
       uint64_t      prim_key;  // primary key
       account_name  owner;      // the order owner
       uint64_t       business;
@@ -47,16 +47,18 @@ class zebra : public eosio::contract {
       uint64_t      budget_unit_price;
       std::string      delivery_physical_address;
       std::string      note;
+      uint64_t accepted_bid;
+      uint64_t bid_accepted_at;
       uint64_t      timestamp; // the store the last update block time
 
       // primary key
       auto primary_key() const { return prim_key; }
     };
 
-    typedef eosio::multi_index< N(order), order > order_table;
+    typedef eosio::multi_index< N(order2), order2 > order_table;
 
     /// @abi table
-    struct bid2 {
+    struct bid3 {
       uint64_t      prim_key;  // primary key
       account_name  owner;
       uint64_t      order;
@@ -68,7 +70,7 @@ class zebra : public eosio::contract {
       auto primary_key() const { return prim_key; }
     };
 
-    typedef eosio::multi_index< N(bid2), bid2 > bid_table;
+    typedef eosio::multi_index< N(bid3), bid3 > bid_table;
 
   public:
     using contract::contract;
@@ -118,13 +120,13 @@ class zebra : public eosio::contract {
     }
 
     /// @abi action
-    void updategroup( account_name _owner, uint64_t& _id, std::string& _name, std::vector<uint8_t>& _members ) {
+    void updategroup( account_name _owner, uint64_t& _groupid, std::string& _name, std::vector<uint8_t>& _members ) {
       // to sign the action with the given account
       require_auth( _owner );
 
       group_table obj(_self, _self); // code, scope
 
-      auto itr = obj.find( _id );
+      auto itr = obj.find( _groupid );
       eosio_assert(itr != obj.end(), "group doesn't exists");
 
       obj.modify(itr, itr->prim_key, [&]( auto& address ) {
@@ -184,6 +186,25 @@ class zebra : public eosio::contract {
         address.timestamp   = now();
       });
     }
+
+    /// @abi action
+    void acceptbid(
+      account_name _owner,
+      uint64_t& _order,
+      uint64_t& _bid
+    ) {
+      require_auth( _owner );
+
+      order_table obj(_self, _self); // code, scope
+
+      auto itr = obj.find( _order );
+      eosio_assert(itr != obj.end(), "order doesn't exists");
+
+      obj.modify(itr, itr->prim_key, [&]( auto& address ) {
+        address.accepted_bid     = _bid;
+        address.bid_accepted_at  = now();
+      });
+    }
 };
 
-EOSIO_ABI( zebra, (addbusiness)(addgroup)(updategroup)(createorder)(createbid) )
+EOSIO_ABI( zebra, (addbusiness)(addgroup)(updategroup)(createorder)(createbid)(acceptbid) )

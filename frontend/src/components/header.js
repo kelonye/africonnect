@@ -5,10 +5,8 @@ import { withStyles } from '@material-ui/core/styles';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
-import SearchIcon from '@material-ui/icons/Search';
 import { Link } from 'react-router-dom';
-
+import Money from 'components/money';
 import { USER } from 'eos';
 
 const styles = theme => ({
@@ -38,9 +36,10 @@ class Component extends React.Component {
         </Typography>
 
         <div>
-          <IconButton>
-            <SearchIcon />
-          </IconButton>
+          <Button color="inherit" variant="outlined" size="small">
+            BALANCE: <Money money={10000 * 100} />
+          </Button>
+          &nbsp;
           <Link to="/buy">
             <Button variant="outlined" color="primary">
               BUY

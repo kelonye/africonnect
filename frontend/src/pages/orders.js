@@ -10,6 +10,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import { Link } from 'react-router-dom';
+import Money from 'components/money';
 
 const styles = theme => ({});
 
@@ -24,6 +25,7 @@ class Component extends React.Component {
         <Table className={classes.table}>
           <TableHead>
             <TableRow>
+              <TableCell>ID</TableCell>
               <TableCell>Business</TableCell>
               <TableCell>Variety</TableCell>
               <TableCell numeric>Quantity</TableCell>
@@ -36,12 +38,17 @@ class Component extends React.Component {
             {orders.map(row => (
               <TableRow key={row.prim_key}>
                 <TableCell component="th" scope="row">
-                  {row.business.name}
+                  #{row.prim_key}
                 </TableCell>
-                <TableCell numeric>{row.variety.name}</TableCell>
+                <TableCell>{row.business && row.businessObj.name}</TableCell>
+                <TableCell numeric>{row.varietyName}</TableCell>
                 <TableCell numeric>{row.quantity}</TableCell>
-                <TableCell numeric>${row.budget_unit_price}</TableCell>
-                <TableCell numeric>${row.total_cost}</TableCell>
+                <TableCell numeric>
+                  <Money money={row.budget_unit_price} />
+                </TableCell>
+                <TableCell numeric>
+                  <Money money={row.total_cost} />
+                </TableCell>
                 <TableCell>
                   <Link to={`/bid/${row.prim_key}`}>BID</Link>
                 </TableCell>

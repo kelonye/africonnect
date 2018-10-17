@@ -37,11 +37,8 @@ export const ordersMapSelector = createSelector(
   orders => {
     const buff = {};
     orders.forEach(order => {
-      order.business = getBusinessByKey(order.business);
-      order.variety = {
-        id: order.variety,
-        name: VARIETIES[order.variety]
-      };
+      order.businessObj = getBusinessByKey(order.business);
+      order.varietyName = VARIETIES[order.variety];
       order.total_cost = order.quantity * order.budget_unit_price;
       buff[order.prim_key] = order;
     });
@@ -54,9 +51,11 @@ export const bidsMapSelector = createSelector(
   bids => {
     const buff = {};
     bids.forEach(bid => {
-      bid.group = getGroupByKey(bid.group);
-      bid.order = getOrderByKey(bid.order);
-      bid.total_cost = bid.order.quantity * bid.unit_price;
+      bid.groupObj = getGroupByKey(bid.group);
+      bid.orderObj = getOrderByKey(bid.order);
+      if (bid.orderObj) {
+        bid.total_cost = bid.orderObj.quantity * bid.unit_price;
+      }
       buff[bid.prim_key] = bid;
     });
     return buff;
@@ -85,6 +84,7 @@ export function getGroupByKey(primKey) {
 
 export const ordersSelector = createSelector(
   state => state.orders,
+  ordersMapSelector,
   orders => orders
 );
 
@@ -102,9 +102,10 @@ export const myGroupsSelector = createSelector(
 export const myOrdersSelector = createSelector(
   state => state.orders,
   state => state.bids,
+  bidsMapSelector,
   (orders, bids) =>
     orders.filter(b => b.owner === USER.name).map(o => {
-      o.noOfBids = bids.filter(b => b.order === o.prim_key).length;
+      o.noOfBids = bids.filter(b => b.owner === o.prim_key).length;
       return o;
     })
 );
@@ -115,7 +116,11 @@ export const myBidsSelector = createSelector(
   bids => bids.filter(b => b.owner === USER.name)
 );
 
-export const getOrderBids = orderId => {
+export const getOrderBids = id => {
   const { bids } = store.getState();
-  return bids.filter(b => b.order === orderId);
+  return bids.filter(b => b.order === id);
+};
+
+export const getGroupBusinesses = group => {
+  return group.members.map(getBusinessByKey);
 };
