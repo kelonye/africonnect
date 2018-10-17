@@ -110,18 +110,21 @@ class Component extends React.Component {
             </TableRow>
           </TableHead>
           <TableBody>
-            {bids.map(row => (
-              <TableRow key={row.prim_key}>
-                <TableCell component="th" scope="row">
-                  #{row.orderObj.prim_key}
-                </TableCell>
-                <TableCell>{row.groupObj.name}</TableCell>
-                <TableCell>{!row.won ? 'FALSE' : 'TRUE'}</TableCell>
-                <TableCell>
-                  <Link to={`/view-bid/${row.prim_key}`}>VIEW</Link>
-                </TableCell>
-              </TableRow>
-            ))}
+            {bids.map(
+              row =>
+                !row.orderObj ? null : (
+                  <TableRow key={row.prim_key}>
+                    <TableCell component="th" scope="row">
+                      #{row.orderObj.prim_key}
+                    </TableCell>
+                    <TableCell>{row.groupObj.name}</TableCell>
+                    <TableCell>{!row.won ? 'FALSE' : 'TRUE'}</TableCell>
+                    <TableCell>
+                      <Link to={`/view-bid/${row.prim_key}`}>VIEW</Link>
+                    </TableCell>
+                  </TableRow>
+                )
+            )}
           </TableBody>
         </Table>
 

@@ -204,6 +204,8 @@ class zebra : public eosio::contract {
         address.accepted_bid     = _bid;
         address.bid_accepted_at  = now();
       });
+
+      // todo: release funds
     }
 };
 

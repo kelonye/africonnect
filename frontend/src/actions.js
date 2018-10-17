@@ -40,3 +40,22 @@ export function getBids() {
       });
     });
 }
+
+export function getBalance() {
+  return (dispatch, getState) =>
+    new Promise((resolve, reject) => {
+      getRows('accounts', { code: 'eosio.token', scope: USER.name }).then(
+        balances => {
+          for (let i = 0; i < balances.length; i++) {
+            const { balance } = balances[i];
+            if (-1 !== balance.indexOf('USDT')) {
+              dispatch({ type: 'BALANCE', payload: parseInt(balance, 10) });
+              resolve();
+              break;
+            }
+          }
+          resolve();
+        }
+      );
+    });
+}

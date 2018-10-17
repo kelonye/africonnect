@@ -43,12 +43,19 @@ const styles = theme => ({
 
 class Component extends React.Component {
   componentDidMount() {
-    const { getBusinesses, getOrders, getGroups, getBids } = this.props;
+    const {
+      getBusinesses,
+      getOrders,
+      getGroups,
+      getBids,
+      getBalance
+    } = this.props;
 
     getBusinesses();
     getGroups();
     getOrders();
     getBids();
+    getBalance();
   }
 
   render() {

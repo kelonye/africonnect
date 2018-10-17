@@ -1,4 +1,5 @@
 import React from 'react';
+import Promise from 'bluebird';
 import { connect } from 'react-redux';
 import * as mapDispatchToProps from 'actions';
 import { withStyles } from '@material-ui/core/styles';
@@ -14,14 +15,14 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Button from '@material-ui/core/Button';
-import { USER, pushAction } from 'eos';
+import { USER, API, pushAction } from 'eos';
 import Money from 'components/money';
 
 const styles = theme => ({});
 
 class Component extends React.Component {
   acceptBid(bid) {
-    const { getOrders, order, history } = this.props;
+    const { getOrders, order, history, releaseFunds } = this.props;
     const data = {
       _owner: USER.name,
       _order: order.prim_key,
@@ -30,7 +31,41 @@ class Component extends React.Component {
 
     console.log(data);
 
-    pushAction('acceptbid', data)
+    // pushAction('acceptbid', data)
+    Promise.resolve(true)
+      .then(() => {
+        const amt = order.total_cost / 2;
+        return new Promise.all(
+          ['b', 'c'].map(user =>
+            API.transact(
+              {
+                actions: [
+                  {
+                    account: 'eosio.token',
+                    name: 'transfer',
+                    authorization: [
+                      {
+                        actor: USER.name,
+                        permission: 'active'
+                      }
+                    ],
+                    data: {
+                      from: USER.name,
+                      to: `useraaaaaaa${user}`,
+                      quantity: `${amt} USDT`,
+                      memo: 'memo'
+                    }
+                  }
+                ]
+              },
+              {
+                blocksBehind: 3,
+                expireSeconds: 30
+              }
+            )
+          )
+        );
+      })
       .then(getOrders)
       .then(() => {
         history.replace({
@@ -76,28 +111,33 @@ class Component extends React.Component {
               </TableRow>
             </TableHead>
             <TableBody>
-              {bids.map(row => (
-                <TableRow key={row.prim_key}>
-                  <TableCell component="th" scope="row">
-                    {row.groupObj.name}
-                  </TableCell>
-                  <TableCell numeric>
-                    {Math.round(10 * Math.random())}
-                  </TableCell>
-                  <TableCell numeric>
-                    <Money money={row.unit_price} />
-                  </TableCell>
-                  <TableCell numeric>
-                    <Money money={row.total_cost} />
-                  </TableCell>
-                  <TableCell numeric>
-                    <Money money={row.total_cost - order.total_cost} />
-                  </TableCell>
-                  <TableCell>
-                    <Button onClick={() => this.acceptBid(row)}>ACCEPT</Button>
-                  </TableCell>
-                </TableRow>
-              ))}
+              {bids.map(
+                row =>
+                  !row.groupObj ? null : (
+                    <TableRow key={row.prim_key}>
+                      <TableCell component="th" scope="row">
+                        {row.groupObj.name}
+                      </TableCell>
+                      <TableCell numeric>
+                        {Math.round(10 * Math.random())}
+                      </TableCell>
+                      <TableCell numeric>
+                        <Money money={row.unit_price} />
+                      </TableCell>
+                      <TableCell numeric>
+                        <Money money={row.total_cost} />
+                      </TableCell>
+                      <TableCell numeric>
+                        <Money money={row.total_cost - order.total_cost} />
+                      </TableCell>
+                      <TableCell>
+                        <Button onClick={() => this.acceptBid(row)}>
+                          ACCEPT
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  )
+              )}
             </TableBody>
           </Table>
         </div>

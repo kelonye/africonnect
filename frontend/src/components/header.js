@@ -1,6 +1,6 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-
+import { connect } from 'react-redux';
+import * as mapDispatchToProps from 'actions';
 import { withStyles } from '@material-ui/core/styles';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
@@ -28,7 +28,7 @@ const styles = theme => ({
 
 class Component extends React.Component {
   render() {
-    const { classes } = this.props;
+    const { classes, balance } = this.props;
     return (
       <Toolbar className={classes.toolbarMain}>
         <Typography variant="title" color="inherit" className={classes.grow}>
@@ -37,7 +37,7 @@ class Component extends React.Component {
 
         <div>
           <Button color="inherit" variant="outlined" size="small">
-            BALANCE: <Money money={10000 * 100} />
+            BALANCE: <Money money={balance} />
           </Button>
           &nbsp;
           <Link to="/buy">
@@ -61,8 +61,13 @@ class Component extends React.Component {
   }
 }
 
-Component.propTypes = {
-  classes: PropTypes.object.isRequired
+const mapStateToProps = ({ balance }) => {
+  return {
+    balance
+  };
 };
 
-export default withStyles(styles)(Component);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withStyles(styles)(Component));

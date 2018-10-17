@@ -105,7 +105,7 @@ export const myOrdersSelector = createSelector(
   bidsMapSelector,
   (orders, bids) =>
     orders.filter(b => b.owner === USER.name).map(o => {
-      o.noOfBids = bids.filter(b => b.owner === o.prim_key).length;
+      o.noOfBids = bids.filter(b => b.order === o.prim_key).length;
       return o;
     })
 );

@@ -21,6 +21,7 @@ if (user && user.privateKey) {
   });
 }
 
+export const API = api;
 export const USER = user;
 export const pushAction = (action, data) =>
   api.transact(
@@ -45,12 +46,12 @@ export const pushAction = (action, data) =>
     }
   );
 
-export const getRows = table =>
+export const getRows = (table, opts = {}) =>
   rpc
     .get_table_rows({
       json: true,
-      code: CONTRACT_ACCOUNT,
-      scope: CONTRACT_ACCOUNT,
+      code: opts.code || CONTRACT_ACCOUNT,
+      scope: opts.scope || CONTRACT_ACCOUNT,
       table,
       limit: 100
     })
