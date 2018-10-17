@@ -1,65 +1,114 @@
 import React from 'react';
 import _ from 'lodash';
-import PropTypes from 'prop-types';
-import { USER, getRows } from 'eos';
-
+import { connect } from 'react-redux';
+import * as mapDispatchToProps from 'actions';
+import { myBusinessesSelector, myOrdersSelector } from 'selectors';
 import { withStyles } from '@material-ui/core/styles';
 import { Link } from 'react-router-dom';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
 
 const styles = theme => ({});
 
 class Component extends React.Component {
-  state = {
-    businesses: [],
-    orders: []
-  };
+  renderBusinesses() {
+    const { classes, businesses } = this.props;
+    return (
+      <div>
+        <h2 style={{ display: 'flex', alignItems: 'center' }}>
+          My Businesses &nbsp;
+          <Link to="/add-business" style={{ fontSize: 18 }}>
+            +
+          </Link>
+        </h2>
+        <Table className={classes.table}>
+          <TableHead>
+            <TableRow>
+              <TableCell>Name</TableCell>
+              <TableCell />
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {businesses.map(row => (
+              <TableRow key={row.prim_key}>
+                <TableCell component="th" scope="row">
+                  {row.name}
+                </TableCell>
+                <TableCell>
+                  <Link to={`/business/${row.prim_key}`}>VIEW</Link>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+    );
+  }
 
-  componentDidMount() {
-    getRows('business').then(data => {
-      const businesses = data.filter(b => b.owner === USER.name);
-      this.setState({ businesses });
-
-      getRows('group').then(data => {
-        const groups = data.filter(g => _.uniqBy(g.members, businesses));
-        this.setState({ groups });
-      });
-
-      getRows('order').then(data => {
-        const orders = data.filter(b => b.owner === USER.name);
-        this.setState({ orders });
-      });
-    });
+  renderOrders() {
+    const { classes, orders } = this.props;
+    return (
+      <div>
+        <h2 style={{ display: 'flex', alignItems: 'center' }}>
+          My Orders &nbsp;
+          <Link to="/order" style={{ fontSize: 18 }}>
+            +
+          </Link>
+        </h2>
+        <Table className={classes.table}>
+          <TableHead>
+            <TableRow>
+              <TableCell>ID</TableCell>
+              <TableCell>Bids</TableCell>
+              <TableCell />
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {orders.map(row => (
+              <TableRow key={row.prim_key}>
+                <TableCell component="th" scope="row">
+                  #{row.prim_key}
+                </TableCell>
+                <TableCell numeric>{row.noOfBids}</TableCell>
+                <TableCell>
+                  <Link to={`/orders/${row.prim_key}`}>VIEW</Link>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+    );
   }
 
   render() {
-    const { classes } = this.props;
-    const { businesses, orders } = this.state;
-
     return (
       <div>
-        <h1>My Businesses</h1>
-        <ul>
-          {businesses.map(b => (
-            <li key={b.prim_key}>{b.name}</li>
-          ))}
-        </ul>
-        <Link to="/add-business">Add Business</Link>
+        <h2>BUYER DASHBOARD</h2>
         <br />
 
-        <h1>My Orders</h1>
-        <ul>
-          {orders.map(b => (
-            <li key={b.prim_key}>{b.prim_key}</li>
-          ))}
-        </ul>
-        <Link to="/order">Create New Order</Link>
+        {this.renderBusinesses()}
+        <br />
+
+        {this.renderOrders()}
       </div>
     );
   }
 }
 
-Component.propTypes = {
-  classes: PropTypes.object.isRequired
+Component.propTypes = {};
+
+const mapStateToProps = state => {
+  return {
+    businesses: myBusinessesSelector(state),
+    orders: myOrdersSelector(state)
+  };
 };
 
-export default withStyles(styles)(Component);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withStyles(styles)(Component));

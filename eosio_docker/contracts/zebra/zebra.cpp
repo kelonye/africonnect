@@ -55,8 +55,35 @@ class zebra : public eosio::contract {
 
     typedef eosio::multi_index< N(order), order > order_table;
 
+    /// @abi table
+    struct bid2 {
+      uint64_t      prim_key;  // primary key
+      account_name  owner;
+      uint64_t      order;
+      uint64_t      group;
+      uint64_t      unit_price;
+      uint64_t      timestamp; // the store the last update block time
+
+      // primary key
+      auto primary_key() const { return prim_key; }
+    };
+
+    typedef eosio::multi_index< N(bid2), bid2 > bid_table;
+
   public:
     using contract::contract;
+
+    //@abi action
+    void droptable(std::string& _table){
+      // require_auth(eosio::string_to_name("zebrauser"));
+
+      if (_table == "bid") {
+        bid_table example(_self, _self); // code, scope
+        for(auto itr = example.begin(); itr != example.end();) {
+            itr = example.erase(itr);
+        }
+      }
+    }
 
     /// @abi action
     void addbusiness( account_name _owner, std::string& _name, std::string& _physical_address ) {
@@ -134,6 +161,29 @@ class zebra : public eosio::contract {
         address.timestamp   = now();
       });
     }
+
+    /// @abi action
+    void createbid(
+      account_name _owner,
+      uint64_t& _order,
+      uint64_t& _group,
+      uint64_t& _unit_price
+    ) {
+      require_auth( _owner );
+
+      bid_table obj(_self, _self);
+
+      // todo: verify group belongs to owner
+
+      obj.emplace( _self, [&]( auto& address ) {
+        address.prim_key    = obj.available_primary_key();
+        address.owner       = _owner;
+        address.order = _order;
+        address.group    = _group;
+        address.unit_price = _unit_price;
+        address.timestamp   = now();
+      });
+    }
 };
 
-EOSIO_ABI( zebra, (addbusiness)(addgroup)(updategroup)(createorder) )
+EOSIO_ABI( zebra, (addbusiness)(addgroup)(updategroup)(createorder)(createbid) )

@@ -1,0 +1,12 @@
+import { combineReducers } from 'redux';
+import businesses from './businesses';
+import groups from './groups';
+import orders from './orders';
+import bids from './bids';
+
+export default combineReducers({
+  businesses,
+  groups,
+  orders,
+  bids
+});
