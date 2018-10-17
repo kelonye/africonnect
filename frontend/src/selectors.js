@@ -14,13 +14,6 @@ export const VARIETIES = [
   'Zutano'
 ];
 
-export function getVariety(id) {
-  return {
-    id,
-    name: VARIETIES[id]
-  };
-}
-
 export const businessesMapSelector = createSelector(
   state => state.businesses,
   businesses => {
@@ -43,7 +36,15 @@ export const ordersMapSelector = createSelector(
   state => state.orders,
   orders => {
     const buff = {};
-    orders.forEach(b => (buff[b.prim_key] = b));
+    orders.forEach(order => {
+      order.business = getBusinessByKey(order.business);
+      order.variety = {
+        id: order.variety,
+        name: VARIETIES[order.variety]
+      };
+      order.total_cost = order.quantity * order.budget_unit_price;
+      buff[order.prim_key] = order;
+    });
     return buff;
   }
 );
@@ -52,7 +53,12 @@ export const bidsMapSelector = createSelector(
   state => state.bids,
   bids => {
     const buff = {};
-    bids.forEach(b => (buff[b.prim_key] = b));
+    bids.forEach(bid => {
+      bid.group = getGroupByKey(bid.group);
+      bid.order = getOrderByKey(bid.order);
+      bid.total_cost = bid.order.quantity * bid.unit_price;
+      buff[bid.prim_key] = bid;
+    });
     return buff;
   }
 );
@@ -77,22 +83,9 @@ export function getGroupByKey(primKey) {
   return groups[primKey];
 }
 
-export function getOrder(order) {
-  order.business = getBusinessByKey(order.business);
-  order.variety = getVariety(order.variety);
-  order.total_cost = order.quantity * order.budget_unit_price;
-  return order;
-}
-
-export function getBid(bid) {
-  bid.group = getGroupByKey(bid.group);
-  bid.order = getOrderByKey(bid.order);
-  return bid;
-}
-
 export const ordersSelector = createSelector(
   state => state.orders,
-  orders => orders.map(getOrder)
+  orders => orders
 );
 
 export const myBusinessesSelector = createSelector(
@@ -103,16 +96,26 @@ export const myBusinessesSelector = createSelector(
 export const myGroupsSelector = createSelector(
   state => state.groups,
   myBusinessesSelector,
-  (groups, businesses) =>
-    groups.filter(g => _.uniqBy(g.members, businesses)).map(getOrder)
+  (groups, businesses) => groups.filter(g => _.uniqBy(g.members, businesses))
 );
 
 export const myOrdersSelector = createSelector(
   state => state.orders,
-  orders => orders.filter(b => b.owner === USER.name)
+  state => state.bids,
+  (orders, bids) =>
+    orders.filter(b => b.owner === USER.name).map(o => {
+      o.noOfBids = bids.filter(b => b.order === o.prim_key).length;
+      return o;
+    })
 );
 
 export const myBidsSelector = createSelector(
   state => state.bids,
-  bids => bids.filter(b => b.owner === USER.name).map(getBid)
+  bidsMapSelector,
+  bids => bids.filter(b => b.owner === USER.name)
 );
+
+export const getOrderBids = orderId => {
+  const { bids } = store.getState();
+  return bids.filter(b => b.order === orderId);
+};

@@ -9,7 +9,7 @@ import FormControl from '@material-ui/core/FormControl';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import withStyles from '@material-ui/core/styles/withStyles';
-import { myGroupsSelector, ordersMapSelector } from 'selectors';
+import { myGroupsSelector, getOrderByKey } from 'selectors';
 
 const styles = theme => ({
   paper: {
@@ -56,13 +56,14 @@ class Component extends React.Component {
       .then(getBids)
       .then(() => {
         history.replace({
-          pathname: '/sell'
+          pathname: '/buy'
         });
       });
   }
 
   render() {
     const { classes, groups, order } = this.props;
+    if (!order) return null;
     const { group } = this.state;
     return (
       <form className={classes.form} onSubmit={e => this.handleFormEvent(e)}>
@@ -99,7 +100,7 @@ class Component extends React.Component {
 
         <FormControl margin="normal" required fullWidth>
           <InputLabel htmlFor="unit_price">Budget Unit Price</InputLabel>
-          <Input id="unit_price" name="unit_price" type="number" />
+          <Input id="unit_price" name="unit_price" />
         </FormControl>
 
         <Button
@@ -119,7 +120,7 @@ class Component extends React.Component {
 const mapStateToProps = (state, ownProps) => {
   return {
     groups: myGroupsSelector(state),
-    order: ordersMapSelector(state)[Number(ownProps.match.params.id)]
+    order: getOrderByKey(Number(ownProps.match.params.id))
   };
 };
 

@@ -42,7 +42,7 @@ class Component extends React.Component {
             <SearchIcon />
           </IconButton>
           <Link to="/buy">
-            <Button variant="contained" color="primary">
+            <Button variant="outlined" color="primary">
               BUY
             </Button>
           </Link>

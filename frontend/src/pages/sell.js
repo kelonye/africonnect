@@ -14,20 +14,20 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
 
 const styles = theme => ({});
 
 class Component extends React.Component {
+  state = {
+    activeTab: 0
+  };
+
   renderGroups() {
     const { classes, groups } = this.props;
     return (
       <div>
-        <h2 style={{ display: 'flex', alignItems: 'center' }}>
-          My Groups &nbsp;
-          <Link to="/create-group" style={{ fontSize: 18 }}>
-            +
-          </Link>
-        </h2>
         <Table className={classes.table}>
           <TableHead>
             <TableRow>
@@ -52,6 +52,11 @@ class Component extends React.Component {
             ))}
           </TableBody>
         </Table>
+
+        <br />
+        <Link to="/create-group" style={{ fontSize: 18 }}>
+          Create New Group
+        </Link>
       </div>
     );
   }
@@ -60,12 +65,6 @@ class Component extends React.Component {
     const { classes, businesses } = this.props;
     return (
       <div>
-        <h2 style={{ display: 'flex', alignItems: 'center' }}>
-          My Businesses &nbsp;
-          <Link to="/add-business" style={{ fontSize: 18 }}>
-            +
-          </Link>
-        </h2>
         <Table className={classes.table}>
           <TableHead>
             <TableRow>
@@ -88,6 +87,11 @@ class Component extends React.Component {
             ))}
           </TableBody>
         </Table>
+
+        <br />
+        <Link to="/add-business" style={{ fontSize: 18 }}>
+          Add a Business
+        </Link>
       </div>
     );
   }
@@ -96,12 +100,6 @@ class Component extends React.Component {
     const { classes, bids } = this.props;
     return (
       <div>
-        <h2 style={{ display: 'flex', alignItems: 'center' }}>
-          My Bids &nbsp;
-          <Link to="/orders" style={{ fontSize: 18 }}>
-            Find Orders
-          </Link>
-        </h2>
         <Table className={classes.table}>
           <TableHead>
             <TableRow>
@@ -120,29 +118,46 @@ class Component extends React.Component {
                 <TableCell>{row.group.name}</TableCell>
                 <TableCell>{!row.won ? 'FALSE' : 'TRUE'}</TableCell>
                 <TableCell>
-                  <Link to={`/group/${row.prim_key}`}>VIEW</Link>
+                  <Link to={`/view-bid/${row.prim_key}`}>VIEW</Link>
                 </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
+
+        <br />
+        <Link to="/orders" style={{ fontSize: 18 }}>
+          Find Orders
+        </Link>
       </div>
     );
   }
 
   render() {
+    const { activeTab } = this.state;
+    const tab = {
+      0: 'renderGroups',
+      1: 'renderBusinesses',
+      2: 'renderBids'
+    }[activeTab];
+
     return (
       <div>
         <h2>SELLER DASHBOARD</h2>
         <br />
 
-        {this.renderGroups()}
-        <br />
+        <Tabs
+          value={activeTab}
+          indicatorColor="primary"
+          textColor="primary"
+          onChange={(e, activeTab) => this.setState({ activeTab })}
+        >
+          <Tab label="My Groups" value={0} />
+          <Tab label="My Businesses" value={1} />
+          <Tab label="My Bids" value={2} />
+        </Tabs>
 
-        {this.renderBusinesses()}
-        <br />
-
-        {this.renderBids()}
+        {this[tab]()}
       </div>
     );
   }

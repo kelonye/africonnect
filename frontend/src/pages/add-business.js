@@ -27,17 +27,19 @@ class Component extends React.Component {
 
     const _name = event.target.name.value;
     const _physical_address = event.target.address.value;
-    const { history } = this.props;
+    const { history, getBusinesses } = this.props;
 
     pushAction('addbusiness', {
       _owner: USER.name,
       _name,
       _physical_address
-    }).then(() => {
-      history.replace({
-        pathname: '/'
+    })
+      .then(getBusinesses)
+      .then(() => {
+        history.replace({
+          pathname: '/'
+        });
       });
-    });
   }
 
   render() {

@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import * as mapDispatchToProps from 'actions';
 import { withStyles } from '@material-ui/core/styles';
@@ -13,6 +12,9 @@ import NewOrder from 'pages/order';
 import Orders from 'pages/orders';
 import Login from 'pages/login';
 import Bid from 'pages/bid';
+import AcceptBid from 'pages/404';
+import ViewOrder from 'pages/view-order';
+import ViewBid from 'pages/view-bid';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import { USER } from 'eos';
 import theme from 'theme';
@@ -67,6 +69,9 @@ class Component extends React.Component {
                 <Route path="/order" component={NewOrder} />
                 <Route path="/orders" component={Orders} />
                 <Route path="/bid/:id" component={Bid} />
+                <Route path="/view-order/:id" component={ViewOrder} />
+                <Route path="/view-bid/:id" component={ViewBid} />
+                <Route path="/accept-bid/:id" component={AcceptBid} />
               </div>
             </div>
           ) : (
@@ -78,9 +83,6 @@ class Component extends React.Component {
   }
 }
 
-Component.propTypes = {
-  classes: PropTypes.object.isRequired
-};
 const mapStateToProps = state => {
   return {};
 };

@@ -178,9 +178,9 @@ class zebra : public eosio::contract {
       obj.emplace( _self, [&]( auto& address ) {
         address.prim_key    = obj.available_primary_key();
         address.owner       = _owner;
-        address.order = _order;
-        address.group    = _group;
-        address.unit_price = _unit_price;
+        address.order       = _order;
+        address.group       = _group;
+        address.unit_price  = _unit_price;
         address.timestamp   = now();
       });
     }
