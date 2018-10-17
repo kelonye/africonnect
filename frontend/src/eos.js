@@ -1,24 +1,57 @@
-import EOS from 'eosjs';
-import { setIdentity } from './actions';
-import store from './store';
+import { Api, Rpc, SignatureProvider } from 'eosjs';
+import { TextDecoder, TextEncoder } from 'text-encoding';
 
-export default new class {
-  constructor() {
-    this.network = {
-      blockchain: 'eos',
-      host: 'localhost',
-      port: 8888,
-      protocol: 'http',
-      chainId:
-        'cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f'
-    };
+const CONTRACT_ACCOUNT = 'zebrauser';
 
-    document.addEventListener('scatterLoaded', scatterExtension => {
-      this.scatter = window.scatter;
+let user = window.localStorage.getItem('user');
+if (user) {
+  user = JSON.parse(user);
+}
 
-      store.dispatch(setIdentity(this.scatter.identity));
+const rpc = new Rpc.JsonRpc('http://localhost:8888');
 
-      this.eos = this.scatter.eos(this.network, EOS, { verbose: true });
-    });
-  }
-}();
+let api;
+if (user && user.privateKey) {
+  const signatureProvider = new SignatureProvider([user.privateKey]);
+  api = new Api({
+    rpc,
+    signatureProvider,
+    textDecoder: new TextDecoder(),
+    textEncoder: new TextEncoder()
+  });
+}
+
+export const USER = user;
+export const pushAction = (action, data) =>
+  api.transact(
+    {
+      actions: [
+        {
+          account: CONTRACT_ACCOUNT,
+          name: action,
+          authorization: [
+            {
+              actor: USER.name,
+              permission: 'active'
+            }
+          ],
+          data
+        }
+      ]
+    },
+    {
+      blocksBehind: 3,
+      expireSeconds: 30
+    }
+  );
+
+export const getRows = table =>
+  rpc
+    .get_table_rows({
+      json: true,
+      code: CONTRACT_ACCOUNT,
+      scope: CONTRACT_ACCOUNT,
+      table,
+      limit: 100
+    })
+    .then(result => result.rows);

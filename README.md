@@ -7,3 +7,13 @@ Add the below to your bash config:
 Start app:
 
     $ ./quick_start.sh
+
+### Development
+
+SSH into container:
+
+    $ make ssh
+
+Compile contract:
+
+    $ make
