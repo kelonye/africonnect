@@ -1,5 +1,4 @@
 import React from 'react';
-import Promise from 'bluebird';
 import { connect } from 'react-redux';
 import * as mapDispatchToProps from 'actions';
 import { withStyles } from '@material-ui/core/styles';
@@ -15,14 +14,14 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Button from '@material-ui/core/Button';
-import { USER, API, pushAction } from 'eos';
+import { USER, pushAction } from 'eos';
 import Money from 'components/money';
 
 const styles = theme => ({});
 
 class Component extends React.Component {
   acceptBid(bid) {
-    const { getOrders, order, history, releaseFunds } = this.props;
+    const { getOrders, order } = this.props;
     const data = {
       _owner: USER.name,
       _order: order.prim_key,
@@ -31,47 +30,7 @@ class Component extends React.Component {
 
     console.log(data);
 
-    // pushAction('acceptbid', data)
-    Promise.resolve(true)
-      .then(() => {
-        const amt = order.total_cost / 2;
-        return new Promise.all(
-          ['b', 'c'].map(user =>
-            API.transact(
-              {
-                actions: [
-                  {
-                    account: 'eosio.token',
-                    name: 'transfer',
-                    authorization: [
-                      {
-                        actor: USER.name,
-                        permission: 'active'
-                      }
-                    ],
-                    data: {
-                      from: USER.name,
-                      to: `useraaaaaaa${user}`,
-                      quantity: `${amt} USDT`,
-                      memo: 'memo'
-                    }
-                  }
-                ]
-              },
-              {
-                blocksBehind: 3,
-                expireSeconds: 30
-              }
-            )
-          )
-        );
-      })
-      .then(getOrders)
-      .then(() => {
-        history.replace({
-          pathname: '/buy'
-        });
-      });
+    pushAction('acceptbid', data).then(getOrders);
   }
 
   render() {

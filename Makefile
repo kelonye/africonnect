@@ -1,5 +1,5 @@
 default:
-	@./scripts/deploy_contract.sh zebra zebrauser zebrawal $(cat ./scripts/zebra_wallet_password.txt)
+	@./scripts/deploy_contract.sh zebra zebrauser zebrawal
 
 ssh:
 	@docker exec -it eosio_zebra_container bash

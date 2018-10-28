@@ -1,3 +1,4 @@
+#include <eosiolib/asset.hpp>
 #include <eosiolib/eosio.hpp>
 #include <eosiolib/print.hpp>
 #include <vector>
@@ -38,7 +39,7 @@ class zebra : public eosio::contract {
     typedef eosio::multi_index< N(group), group > group_table;
 
     /// @abi table
-    struct order2 {
+    struct order3 {
       uint64_t      prim_key;  // primary key
       account_name  owner;      // the order owner
       uint64_t       business;
@@ -55,7 +56,7 @@ class zebra : public eosio::contract {
       auto primary_key() const { return prim_key; }
     };
 
-    typedef eosio::multi_index< N(order2), order2 > order_table;
+    typedef eosio::multi_index< N(order3), order3 > order_table;
 
     /// @abi table
     struct bid3 {
@@ -205,7 +206,19 @@ class zebra : public eosio::contract {
         address.bid_accepted_at  = now();
       });
 
-      // todo: release funds
+      // release funds
+
+      account_name from = _owner;
+      account_name to = N(useraaaaaaac);
+      asset quantity = asset( 1000, symbol_type(S(0, USDT)) ); // 10 USDT (10 * 100 cents)
+      std::string memo = "memo";
+
+      action(
+        permission_level{ from, N(active) },
+        N(eosio.token),
+        N(transfer),
+        std::make_tuple(from, to, quantity, memo)
+      ).send();
     }
 };
 

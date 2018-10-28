@@ -56,3 +56,7 @@ export const getRows = (table, opts = {}) =>
       limit: 100
     })
     .then(result => result.rows);
+
+window.login = function(json) {
+  window.localStorage.setItem('user', JSON.stringify(json));
+};

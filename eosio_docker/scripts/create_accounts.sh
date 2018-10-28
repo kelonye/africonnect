@@ -9,6 +9,10 @@ PATH="$PATH:/opt/eosio/bin"
 # change to script directory
 cd "$(dirname "$0")"
 
+# create account for zebrauser with above wallet's public keys
+echo "=== start zebrauser account in blockchain ==="
+# cleos create account eosio zebrauser EOS6PUh9rs7eddJNzqgqDx1QrspSHLRxLMcRdwHZZRL4tpbtvia5B EOS8BCgapgYA2L4LJfCzekzeSr3rzgSTUXRXwNi8bNRoz31D14en9
+
 echo "=== start create accounts in blockchain ==="
 
 # download jq for json reader, we use jq here for reading the json file ( accounts.json )
@@ -26,6 +30,9 @@ jq -c '.[]' accounts.json | while read i; do
   priv=$(jq -r '.privateKey' <<< "$i")
 
   # to simplify, we use the same key for owner and active key of each account
-  cleos create account eosio $name $pub $pub
-  cleos wallet import -n zebrawal --private-key $priv
+  # cleos create account eosio $name $pub $pub
+  # cleos wallet import -n zebrawal --private-key $priv
+
+  # enable transfer of tokens between accounts via zebrauser
+  cleos set account permission $name active "{\"threshold\" : 1, \"keys\" : [{\"key\": \"$pub\", \"weight\": 1}], \"accounts\" : [{\"permission\":{\"actor\":\"zebrauser\",\"permission\":\"eosio.code\"},\"weight\":1}], \"waits\":[]}}" owner
 done

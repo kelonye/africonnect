@@ -24,7 +24,7 @@ export function getGroups() {
 export function getOrders() {
   return (dispatch, getState) =>
     new Promise((resolve, reject) => {
-      getRows('order2').then(payload => {
+      getRows('order3').then(payload => {
         dispatch({ type: 'ORDERS', payload });
         resolve();
       });
