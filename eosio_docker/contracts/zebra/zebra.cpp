@@ -78,7 +78,7 @@ class zebra : public eosio::contract {
 
     //@abi action
     void droptable(std::string& _table){
-      // require_auth(eosio::string_to_name("zebrauser"));
+      require_auth(N(zebrauser));
 
       if (_table == "bid") {
         bid_table example(_self, _self); // code, scope
@@ -205,14 +205,12 @@ class zebra : public eosio::contract {
         address.accepted_bid     = _bid;
         address.bid_accepted_at  = now();
       });
+    }
 
-      // release funds
-
-      account_name from = _owner;
-      account_name to = N(useraaaaaaac);
-      asset quantity = asset( 1000, symbol_type(S(0, USDT)) ); // 10 USDT (10 * 100 cents)
-      std::string memo = "memo";
-
+    void completeorder(
+      account_name _owner,
+      uint64_t& _order,
+    ) {
       action(
         permission_level{ from, N(active) },
         N(eosio.token),
@@ -222,4 +220,4 @@ class zebra : public eosio::contract {
     }
 };
 
-EOSIO_ABI( zebra, (addbusiness)(addgroup)(updategroup)(createorder)(createbid)(acceptbid) )
+EOSIO_ABI( zebra, (addbusiness)(addgroup)(updategroup)(createorder)(createbid)(acceptbid)(completeorder) )
