@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import * as mapDispatchToProps from 'actions';
-import { myOrdersSelector } from 'selectors';
+import { myBidsSelector } from 'selectors';
 import { withStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -16,20 +16,20 @@ const styles = theme => ({});
 
 class Component extends React.Component {
   render() {
-    const { classes, orders } = this.props;
+    const { classes, bids } = this.props;
 
     return (
       <div>
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <div style={{ flexGrow: 1 }}>
             <Typography variant="h6" style={{ color: 'gray' }} component="h2">
-              MY ORDERS
+              MY BIDS
             </Typography>
           </div>
           <div>
-            <Link to="/order" style={{ fontSize: 18 }}>
+            <Link to="/search-orders" style={{ fontSize: 18 }}>
               <Button variant="outlined" color="secondary">
-                Order
+                Find Orders
               </Button>
             </Link>
           </div>
@@ -38,23 +38,28 @@ class Component extends React.Component {
         <Table className={classes.table}>
           <TableHead>
             <TableRow>
-              <TableCell>ID</TableCell>
-              <TableCell>Bids</TableCell>
+              <TableCell>Order</TableCell>
+              <TableCell>Group</TableCell>
+              <TableCell>WON</TableCell>
               <TableCell />
             </TableRow>
           </TableHead>
           <TableBody>
-            {orders.map(row => (
-              <TableRow key={row.prim_key}>
-                <TableCell component="th" scope="row">
-                  #{row.prim_key}
-                </TableCell>
-                <TableCell numeric>{row.noOfBids}</TableCell>
-                <TableCell>
-                  <Link to={`/view-order/${row.prim_key}`}>VIEW</Link>
-                </TableCell>
-              </TableRow>
-            ))}
+            {bids.map(
+              row =>
+                !row.orderObj ? null : (
+                  <TableRow key={row.prim_key}>
+                    <TableCell component="th" scope="row">
+                      #{row.orderObj.prim_key}
+                    </TableCell>
+                    <TableCell>{row.groupObj.name}</TableCell>
+                    <TableCell>{!row.won ? 'FALSE' : 'TRUE'}</TableCell>
+                    <TableCell>
+                      <Link to={`/view-bid/${row.prim_key}`}>VIEW</Link>
+                    </TableCell>
+                  </TableRow>
+                )
+            )}
           </TableBody>
         </Table>
       </div>
@@ -66,7 +71,7 @@ Component.propTypes = {};
 
 const mapStateToProps = state => {
   return {
-    orders: myOrdersSelector(state)
+    bids: myBidsSelector(state)
   };
 };
 

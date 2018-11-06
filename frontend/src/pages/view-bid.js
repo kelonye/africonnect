@@ -15,6 +15,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Money from 'components/money';
+import Typography from '@material-ui/core/Typography';
 
 const styles = theme => ({});
 
@@ -25,7 +26,9 @@ class Component extends React.Component {
     return (
       <div>
         <div>
-          <h4 style={{ margin: 0 }}>Order #{order.prim_key}</h4>
+          <Typography variant="h6" style={{ color: 'gray' }} component="h2">
+            ORDER #{order.prim_key}
+          </Typography>
           <h5 style={{ margin: 0 }}>
             The below is a breakdown of the delivery status of the members
             participating in this order:

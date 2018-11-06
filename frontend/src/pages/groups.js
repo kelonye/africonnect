@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import * as mapDispatchToProps from 'actions';
-import { myOrdersSelector } from 'selectors';
+import { myGroupsSelector } from 'selectors';
 import { withStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -16,20 +16,20 @@ const styles = theme => ({});
 
 class Component extends React.Component {
   render() {
-    const { classes, orders } = this.props;
+    const { classes, groups } = this.props;
 
     return (
       <div>
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <div style={{ flexGrow: 1 }}>
             <Typography variant="h6" style={{ color: 'gray' }} component="h2">
-              MY ORDERS
+              MY GROUPS
             </Typography>
           </div>
           <div>
-            <Link to="/order" style={{ fontSize: 18 }}>
+            <Link to="/create-group" style={{ fontSize: 18 }}>
               <Button variant="outlined" color="secondary">
-                Order
+                Create New Group
               </Button>
             </Link>
           </div>
@@ -38,20 +38,22 @@ class Component extends React.Component {
         <Table className={classes.table}>
           <TableHead>
             <TableRow>
-              <TableCell>ID</TableCell>
-              <TableCell>Bids</TableCell>
+              <TableCell>Name</TableCell>
+              <TableCell>Members</TableCell>
+              <TableCell>Reputation</TableCell>
               <TableCell />
             </TableRow>
           </TableHead>
           <TableBody>
-            {orders.map(row => (
+            {groups.map(row => (
               <TableRow key={row.prim_key}>
                 <TableCell component="th" scope="row">
-                  #{row.prim_key}
+                  {row.name}
                 </TableCell>
-                <TableCell numeric>{row.noOfBids}</TableCell>
+                <TableCell numeric>{row.members.length}</TableCell>
+                <TableCell numeric>{row.reputation}</TableCell>
                 <TableCell>
-                  <Link to={`/view-order/${row.prim_key}`}>VIEW</Link>
+                  <Link to={`/group/${row.prim_key}`}>VIEW</Link>
                 </TableCell>
               </TableRow>
             ))}
@@ -66,7 +68,7 @@ Component.propTypes = {};
 
 const mapStateToProps = state => {
   return {
-    orders: myOrdersSelector(state)
+    groups: myGroupsSelector(state)
   };
 };
 

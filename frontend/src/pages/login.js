@@ -37,7 +37,7 @@ const styles = theme => ({
     padding: `${theme.spacing.unit * 8}px 0 ${theme.spacing.unit * 6}px`
   },
   heroButtons: {
-    marginTop: theme.spacing.unit * 4
+    marginTop: theme.spacing.unit * 2
   }
 });
 
@@ -46,7 +46,7 @@ class Component extends React.Component {
     const { classes } = this.props;
     return (
       <main className={classes.layout}>
-        <Paper className={classes.paper}>
+        <div className={classes.paper}>
           <Typography
             component="h1"
             variant="h2"
@@ -67,13 +67,13 @@ class Component extends React.Component {
           <div className={classes.heroButtons}>
             <Grid container spacing={16} justify="center">
               <Grid item>
-                <Button variant="contained" color="primary">
+                <Button variant="outlined" color="secondary">
                   LOGIN WITH EOS
                 </Button>
               </Grid>
             </Grid>
           </div>
-        </Paper>
+        </div>
       </main>
     );
   }

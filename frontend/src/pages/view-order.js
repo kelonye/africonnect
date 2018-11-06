@@ -16,6 +16,7 @@ import TableRow from '@material-ui/core/TableRow';
 import Button from '@material-ui/core/Button';
 import { USER, pushAction } from 'eos';
 import Money from 'components/money';
+import Typography from '@material-ui/core/Typography';
 
 const styles = theme => ({});
 
@@ -40,7 +41,9 @@ class Component extends React.Component {
     return (
       <div>
         <div>
-          <h4 style={{ margin: 0 }}>Order #{order.prim_key}</h4>
+          <Typography variant="h6" style={{ color: 'gray' }} component="h2">
+            ORDER #{order.prim_key}
+          </Typography>
           <h5 style={{ margin: 0 }}>
             You can accept the below bids made to this order:
           </h5>

@@ -6,6 +6,7 @@ import FormControl from '@material-ui/core/FormControl';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import withStyles from '@material-ui/core/styles/withStyles';
+import Typography from '@material-ui/core/Typography';
 
 const styles = theme => ({
   avatar: {
@@ -47,7 +48,9 @@ class Component extends React.Component {
     return (
       <form className={classes.form} onSubmit={e => this.handleFormEvent(e)}>
         <div>
-          <h4 style={{ margin: 0 }}>Add Business</h4>
+          <Typography variant="h6" style={{ color: 'gray' }} component="h2">
+            ADD BUSINESS
+          </Typography>
           <h5 style={{ margin: 0 }}>You can add many as possible.</h5>
         </div>
 
@@ -68,7 +71,7 @@ class Component extends React.Component {
         <Button
           type="submit"
           fullWidth
-          variant="contained"
+          variant="outlined"
           color="primary"
           className={classes.submit}
         >

@@ -10,6 +10,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import withStyles from '@material-ui/core/styles/withStyles';
+import Typography from '@material-ui/core/Typography';
 
 const styles = theme => ({
   avatar: {
@@ -71,7 +72,9 @@ class Component extends React.Component {
     return (
       <form className={classes.form} onSubmit={e => this.handleFormEvent(e)}>
         <div>
-          <h4 style={{ margin: 0 }}>Create Order</h4>
+          <Typography variant="h6" style={{ color: 'gray' }} component="h2">
+            CREATE ORDER
+          </Typography>
           <h5 style={{ margin: 0 }}>
             Grouped companies will later submit bids to supply your order.
           </h5>
@@ -134,7 +137,7 @@ class Component extends React.Component {
         <Button
           type="submit"
           fullWidth
-          variant="contained"
+          variant="outlined"
           color="primary"
           className={classes.submit}
         >

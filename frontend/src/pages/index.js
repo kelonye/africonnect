@@ -2,43 +2,39 @@ import React from 'react';
 import { connect } from 'react-redux';
 import * as mapDispatchToProps from 'actions';
 import { withStyles } from '@material-ui/core/styles';
+import theme from 'theme';
 import Header from 'components/header';
-import Home from 'pages/home';
-import Buy from 'pages/buy';
-import Sell from 'pages/sell';
+import Drawer from 'components/drawer';
+import { USER } from 'eos';
+
+import Dashboard from 'pages/dashboard';
+import Groups from 'pages/groups';
+import Businesses from 'pages/businesses';
+import Orders from 'pages/orders';
+import SearchOrders from 'pages/search-orders';
+import Bids from 'pages/bids';
 import CreateGroup from 'pages/404';
 import AddBusiness from 'pages/add-business';
 import NewOrder from 'pages/order';
-import Orders from 'pages/orders';
 import Login from 'pages/login';
 import Bid from 'pages/bid';
 import AcceptBid from 'pages/404';
 import ViewOrder from 'pages/view-order';
 import ViewBid from 'pages/view-bid';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
-import { USER } from 'eos';
-import theme from 'theme';
 
 const styles = theme => ({
-  layout: {
-    width: 'auto',
-    display: 'block', // Fix IE11 issue.
-    marginLeft: theme.spacing.unit * 3,
-    marginRight: theme.spacing.unit * 3,
-    [theme.breakpoints.up(400 + theme.spacing.unit * 3 * 2)]: {
-      width: 700,
-      marginLeft: 'auto',
-      marginRight: 'auto'
-    }
-  },
-  paper: {
-    marginTop: theme.spacing.unit * 8,
+  root: {
     display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px ${theme
-      .spacing.unit * 3}px`
-  }
+    flexGrow: 1
+  },
+  content: {
+    flexGrow: 1,
+    padding: theme.spacing.unit * 3,
+    height: '100vh',
+    overflow: 'auto'
+  },
+  appBarSpacer: theme.mixins.toolbar
 });
 
 class Component extends React.Component {
@@ -60,31 +56,42 @@ class Component extends React.Component {
 
   render() {
     const { classes } = this.props;
+
     return (
-      <div>
-        <Router>
-          {USER ? (
-            <div>
+      <div className={classes.root}>
+        {!USER ? (
+          <Login />
+        ) : (
+          <Router>
+            <div className={classes.root}>
               <Header />
-              <br />
-              <div className={classes.layout}>
-                <Route exact path="/" component={Home} />
-                <Route exact path="/buy" component={Buy} />
-                <Route exact path="/sell" component={Sell} />
+              <Drawer />
+
+              <main className={classes.content}>
+                <div className={classes.appBarSpacer} />
+
+                <Route exact path="/" component={Dashboard} />
+                <Route exact path="/businesses" component={Businesses} />
+                <Route exact path="/groups" component={Groups} />
+
+                {/* buyers */}
+                <Route path="/orders" component={Orders} />
+                <Route path="/search-orders" component={SearchOrders} />
+
+                {/* sellers */}
+                <Route exact path="/bids" component={Bids} />
+
                 <Route path="/create-group" component={CreateGroup} />
                 <Route path="/add-business" component={AddBusiness} />
                 <Route path="/order" component={NewOrder} />
-                <Route path="/orders" component={Orders} />
                 <Route path="/bid/:id" component={Bid} />
                 <Route path="/view-order/:id" component={ViewOrder} />
                 <Route path="/view-bid/:id" component={ViewBid} />
                 <Route path="/accept-bid/:id" component={AcceptBid} />
-              </div>
+              </main>
             </div>
-          ) : (
-            <Login />
-          )}
-        </Router>
+          </Router>
+        )}
       </div>
     );
   }

@@ -11,6 +11,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import withStyles from '@material-ui/core/styles/withStyles';
 import { myGroupsSelector, getOrderByKey } from 'selectors';
 import Money from 'components/money';
+import Typography from '@material-ui/core/Typography';
 
 const styles = theme => ({
   paper: {
@@ -71,14 +72,14 @@ class Component extends React.Component {
       <form className={classes.form} onSubmit={e => this.handleFormEvent(e)}>
         {!order ? null : (
           <div>
-            <h4 style={{ margin: 0 }}>
+            <Typography variant="h6" style={{ color: 'gray' }} component="h2">
               Bid on Order: variety(
               {order.varietyName}
               ), unit price(
               <Money money={order.budget_unit_price} />
               ), total(
               <Money money={order.total_cost} />)
-            </h4>
+            </Typography>
             <h5 style={{ margin: 0 }}>
               Requested by: {order.businessObj.name}
             </h5>
@@ -110,7 +111,7 @@ class Component extends React.Component {
         <Button
           type="submit"
           fullWidth
-          variant="contained"
+          variant="outlined"
           color="primary"
           className={classes.submit}
         >
