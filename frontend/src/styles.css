@@ -2,3 +2,7 @@ a {
   text-decoration: none;
   color: #2196f3;
 }
+
+td {
+  text-align: left !important;
+}

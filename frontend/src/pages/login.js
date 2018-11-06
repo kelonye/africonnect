@@ -5,7 +5,6 @@ import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
-import Paper from '@material-ui/core/Paper';
 
 const styles = theme => ({
   layout: {
@@ -67,7 +66,7 @@ class Component extends React.Component {
           <div className={classes.heroButtons}>
             <Grid container spacing={16} justify="center">
               <Grid item>
-                <Button variant="outlined" color="secondary">
+                <Button variant="contained" color="primary">
                   LOGIN WITH EOS
                 </Button>
               </Grid>

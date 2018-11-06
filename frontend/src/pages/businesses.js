@@ -28,7 +28,7 @@ class Component extends React.Component {
           </div>
           <div>
             <Link to="/add-business" style={{ fontSize: 18 }}>
-              <Button variant="outlined" color="secondary">
+              <Button variant="contained" color="primary">
                 Add
               </Button>
             </Link>
@@ -49,7 +49,9 @@ class Component extends React.Component {
                   {row.name}
                 </TableCell>
                 <TableCell>
-                  <Link to={`/business/${row.prim_key}`}>VIEW</Link>
+                  <Link to={`/business/${row.prim_key}`}>
+                    <Button color="secondary">VIEW</Button>
+                  </Link>
                 </TableCell>
               </TableRow>
             ))}

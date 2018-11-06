@@ -1,3 +1,9 @@
 import React from 'react';
 
-export default ({ money }) => <span>${(money / 100).toFixed(2)}</span>;
+const fmt = m =>
+  (m || 0).toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+// const fmt = m => `$${(m || 0).toFixed(2)}`;
+
+export default ({ money, style = {} }) => (
+  <span style={style}>{fmt(money / 100)}</span>
+);

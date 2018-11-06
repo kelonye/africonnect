@@ -28,7 +28,7 @@ class Component extends React.Component {
           </div>
           <div>
             <Link to="/search-orders" style={{ fontSize: 18 }}>
-              <Button variant="outlined" color="secondary">
+              <Button variant="contained" color="primary">
                 Find Orders
               </Button>
             </Link>
@@ -55,7 +55,9 @@ class Component extends React.Component {
                     <TableCell>{row.groupObj.name}</TableCell>
                     <TableCell>{!row.won ? 'FALSE' : 'TRUE'}</TableCell>
                     <TableCell>
-                      <Link to={`/view-bid/${row.prim_key}`}>VIEW</Link>
+                      <Link to={`/view-bid/${row.prim_key}`}>
+                        <Button color="secondary">VIEW</Button>
+                      </Link>
                     </TableCell>
                   </TableRow>
                 )

@@ -28,7 +28,7 @@ class Component extends React.Component {
           </div>
           <div>
             <Link to="/create-group" style={{ fontSize: 18 }}>
-              <Button variant="outlined" color="secondary">
+              <Button variant="contained" color="primary">
                 Create New Group
               </Button>
             </Link>
@@ -53,7 +53,9 @@ class Component extends React.Component {
                 <TableCell numeric>{row.members.length}</TableCell>
                 <TableCell numeric>{row.reputation}</TableCell>
                 <TableCell>
-                  <Link to={`/group/${row.prim_key}`}>VIEW</Link>
+                  <Link to={`/group/${row.prim_key}`}>
+                    <Button color="secondary">VIEW</Button>
+                  </Link>
                 </TableCell>
               </TableRow>
             ))}

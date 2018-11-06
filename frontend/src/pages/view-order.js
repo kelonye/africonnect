@@ -93,7 +93,10 @@ class Component extends React.Component {
                         <Money money={row.total_cost - order.total_cost} />
                       </TableCell>
                       <TableCell>
-                        <Button onClick={() => this.acceptBid(row)}>
+                        <Button
+                          onClick={() => this.acceptBid(row)}
+                          color="secondary"
+                        >
                           ACCEPT
                         </Button>
                       </TableCell>

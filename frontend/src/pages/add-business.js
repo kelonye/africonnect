@@ -71,7 +71,7 @@ class Component extends React.Component {
         <Button
           type="submit"
           fullWidth
-          variant="outlined"
+          variant="contained"
           color="primary"
           className={classes.submit}
         >

@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import * as mapDispatchToProps from 'actions';
 import { withStyles } from '@material-ui/core/styles';
-
+import { USER } from 'eos';
 import classNames from 'classnames';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import AppBar from '@material-ui/core/AppBar';
@@ -53,12 +53,13 @@ class Component extends React.Component {
     return (
       <AppBar
         position="absolute"
-        color="white"
+        color="default"
         className={classNames(
           classes.appBar,
           drawerOpen && classes.appBarShift
         )}
         style={{
+          background: 'white',
           borderBottom: '1px solid rgba(0, 0, 0, 0.12)',
           boxShadow: 'none'
         }}
@@ -91,10 +92,19 @@ class Component extends React.Component {
             color="inherit"
             noWrap
           >
-            BALANCE: <Money money={balance} />
+            {USER.name}
+            &nbsp; &nbsp;
+            <Money
+              money={balance}
+              style={{
+                background: '#a8c2e21c',
+                borderRadius: 5,
+                padding: '5px 7px'
+              }}
+            />
           </Typography>
           <IconButton color="inherit">
-            <Badge badgeContent={4} color="secondary">
+            <Badge badgeContent={5} color="primary">
               <NotificationsIcon />
             </Badge>
           </IconButton>

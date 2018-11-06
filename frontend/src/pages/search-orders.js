@@ -29,7 +29,7 @@ class Component extends React.Component {
           </div>
           <div>
             <Link to="/order" style={{ fontSize: 18 }}>
-              <Button variant="outlined" color="secondary">
+              <Button variant="contained" color="primary">
                 Order
               </Button>
             </Link>
