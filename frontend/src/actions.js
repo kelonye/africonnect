@@ -1,5 +1,5 @@
 import Promise from 'bluebird';
-import { USER, pushAction, getRows } from 'eos';
+import { USER, getRows } from 'eos';
 
 export function getBusinesses() {
   return (dispatch, getState) =>

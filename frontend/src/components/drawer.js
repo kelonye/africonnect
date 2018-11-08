@@ -2,7 +2,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import * as mapDispatchToProps from 'actions';
 import { withStyles } from '@material-ui/core/styles';
-
 import classNames from 'classnames';
 import Drawer from '@material-ui/core/Drawer';
 import List from '@material-ui/core/List';
@@ -14,13 +13,11 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListSubheader from '@material-ui/core/ListSubheader';
-
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import OrdersIcon from '@material-ui/icons/ShoppingCart';
 import GroupsIcon from '@material-ui/icons/People';
 import BusinessesIcon from '@material-ui/icons/LocalShipping'; // LocationCity
 import BidsIcon from '@material-ui/icons/MonetizationOn';
-
 import ProfileIcon from '@material-ui/icons/AccountBox';
 import SettingsIcon from '@material-ui/icons/Build';
 import LogoutIcon from '@material-ui/icons/PowerSettingsNew';

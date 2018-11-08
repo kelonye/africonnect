@@ -11,6 +11,7 @@ import TableRow from '@material-ui/core/TableRow';
 import { Link } from 'react-router-dom';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
+import OrderNoOfBids from 'components/order-no-of-bids';
 
 const styles = theme => ({});
 
@@ -49,7 +50,9 @@ class Component extends React.Component {
                 <TableCell component="th" scope="row">
                   #{row.prim_key}
                 </TableCell>
-                <TableCell numeric>{row.noOfBids}</TableCell>
+                <TableCell numeric>
+                  <OrderNoOfBids order={row.prim_key} />
+                </TableCell>
                 <TableCell>
                   <Link to={`/view-order/${row.prim_key}`}>
                     <Button color="secondary">VIEW</Button>
@@ -63,8 +66,6 @@ class Component extends React.Component {
     );
   }
 }
-
-Component.propTypes = {};
 
 const mapStateToProps = state => {
   return {

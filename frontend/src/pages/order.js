@@ -59,11 +59,7 @@ class Component extends React.Component {
 
     pushAction('createorder', data)
       .then(getOrders)
-      .then(() => {
-        history.replace({
-          pathname: '/orders'
-        });
-      });
+      .then(() => history.replace({ pathname: '/orders' }));
   }
 
   render() {
@@ -147,8 +143,6 @@ class Component extends React.Component {
     );
   }
 }
-
-Component.propTypes = {};
 
 const mapStateToProps = ({ businesses }) => {
   return {

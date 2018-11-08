@@ -3,12 +3,11 @@ import { connect } from 'react-redux';
 import * as mapDispatchToProps from 'actions';
 import { withStyles } from '@material-ui/core/styles';
 import {
+  getBusinessByKey,
   getOrderByKey,
   getBidByKey,
-  bidsMapSelector,
-  ordersMapSelector,
-  getGroupBusinesses
-} from 'selectors';
+  getGroupByKey
+} from 'utils';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -49,7 +48,7 @@ class Component extends React.Component {
                     {row.name}
                   </TableCell>
                   <TableCell numeric>
-                    <Money money={bid.total_cost / businesses.length} />
+                    <Money money={row.payment} />
                   </TableCell>
                 </TableRow>
               ))}
@@ -62,19 +61,20 @@ class Component extends React.Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const bidId = Number(ownProps.match.params.id);
-  const bid = getBidByKey(bidId);
+  const bidPrimKey = Number(ownProps.match.params.id);
+  const bid = getBidByKey(state, bidPrimKey);
   let order;
   let businesses = [];
-  if (bid && bid.orderObj && bid.groupObj) {
-    order = getOrderByKey(bid.orderObj.prim_key);
-    businesses = getGroupBusinesses(bid.groupObj);
+  if (bid) {
+    order = getOrderByKey(state, bid.order);
+    const group = getGroupByKey(state, bid.group);
+    if (group) {
+      businesses = group.members.map(id => getBusinessByKey(state, id));
+    }
   }
   return {
     order,
     bid,
-    bidsMap: bidsMapSelector(state),
-    ordersMap: ordersMapSelector(state),
     businesses
   };
 };

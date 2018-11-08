@@ -51,7 +51,8 @@ class zebra : public eosio::contract {
       uint64_t accepted_bid;
       uint64_t bid_accepted_at;
       uint64_t      timestamp; // the store the last update block time
-
+      uint64_t payment;
+      
       // primary key
       auto primary_key() const { return prim_key; }
     };

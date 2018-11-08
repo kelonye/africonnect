@@ -2,12 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import * as mapDispatchToProps from 'actions';
 import { withStyles } from '@material-ui/core/styles';
-import {
-  getOrderByKey,
-  getOrderBids,
-  bidsMapSelector,
-  ordersMapSelector
-} from 'selectors';
+import { getOrderByKey, getOrderBids } from 'utils';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -17,6 +12,11 @@ import Button from '@material-ui/core/Button';
 import { USER, pushAction } from 'eos';
 import Money from 'components/money';
 import Typography from '@material-ui/core/Typography';
+import Business from 'components/business';
+import Variety from 'components/variety';
+import Group from 'components/group';
+import OrderTotal from 'components/order-total';
+import OrderDiff from 'components/order-diff';
 
 const styles = theme => ({});
 
@@ -36,7 +36,7 @@ class Component extends React.Component {
 
   render() {
     const { classes, order, bids } = this.props;
-    if (!(order && order.businessObj)) return null;
+    if (!order) return null;
 
     return (
       <div>
@@ -49,14 +49,18 @@ class Component extends React.Component {
           </h5>
         </div>
         <br />
-        <div>Business: {order.businessObj.name}</div>
+        <div>
+          Business: <Business primKey={order.business} />
+        </div>
         <div>Quantity: {order.quantity}</div>
-        <div>Variety: {order.varietyName}</div>
+        <div>
+          Variety: <Variety variety={order.variety} />
+        </div>
         <div>
           Budget Unit Price: <Money money={order.budget_unit_price} />
         </div>
         <div>
-          Total Cost: <Money money={order.total_cost} />
+          Total Cost: <OrderTotal order={order.prim_key} />
         </div>
         <br />
         <div>Bids:</div>
@@ -73,36 +77,33 @@ class Component extends React.Component {
               </TableRow>
             </TableHead>
             <TableBody>
-              {bids.map(
-                row =>
-                  !row.groupObj ? null : (
-                    <TableRow key={row.prim_key}>
-                      <TableCell component="th" scope="row">
-                        {row.groupObj.name}
-                      </TableCell>
-                      <TableCell numeric>
-                        {Math.round(10 * Math.random())}
-                      </TableCell>
-                      <TableCell numeric>
-                        <Money money={row.unit_price} />
-                      </TableCell>
-                      <TableCell numeric>
-                        <Money money={row.total_cost} />
-                      </TableCell>
-                      <TableCell numeric>
-                        <Money money={row.total_cost - order.total_cost} />
-                      </TableCell>
-                      <TableCell>
-                        <Button
-                          onClick={() => this.acceptBid(row)}
-                          color="secondary"
-                        >
-                          ACCEPT
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  )
-              )}
+              {bids.map(row => (
+                <TableRow key={row.prim_key}>
+                  <TableCell component="th" scope="row">
+                    <Group primKey={row.group} />
+                  </TableCell>
+                  <TableCell numeric>
+                    {Math.round(10 * Math.random())}
+                  </TableCell>
+                  <TableCell numeric>
+                    <Money money={row.unit_price} />
+                  </TableCell>
+                  <TableCell numeric>
+                    <OrderTotal order={row.order} />
+                  </TableCell>
+                  <TableCell numeric>
+                    <OrderDiff order={row.order} bid={row.prim_key} />
+                  </TableCell>
+                  <TableCell>
+                    <Button
+                      onClick={() => this.acceptBid(row)}
+                      color="secondary"
+                    >
+                      ACCEPT
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
             </TableBody>
           </Table>
         </div>
@@ -114,10 +115,8 @@ class Component extends React.Component {
 const mapStateToProps = (state, ownProps) => {
   const orderId = Number(ownProps.match.params.id);
   return {
-    order: getOrderByKey(orderId),
-    bids: getOrderBids(orderId),
-    bidsMap: bidsMapSelector(state),
-    ordersMap: ordersMapSelector(state)
+    order: getOrderByKey(state, orderId),
+    bids: getOrderBids(state, orderId)
   };
 };
 

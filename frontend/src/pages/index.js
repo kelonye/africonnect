@@ -6,7 +6,6 @@ import theme from 'theme';
 import Header from 'components/header';
 import Drawer from 'components/drawer';
 import { USER } from 'eos';
-
 import Dashboard from 'pages/dashboard';
 import Groups from 'pages/groups';
 import Businesses from 'pages/businesses';
@@ -18,7 +17,6 @@ import AddBusiness from 'pages/add-business';
 import NewOrder from 'pages/order';
 import Login from 'pages/login';
 import Bid from 'pages/bid';
-import AcceptBid from 'pages/404';
 import ViewOrder from 'pages/view-order';
 import ViewBid from 'pages/view-bid';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
@@ -73,21 +71,19 @@ class Component extends React.Component {
                 <Route exact path="/" component={Dashboard} />
                 <Route exact path="/businesses" component={Businesses} />
                 <Route exact path="/groups" component={Groups} />
-
-                {/* buyers */}
-                <Route path="/orders" component={Orders} />
-                <Route path="/search-orders" component={SearchOrders} />
+                <Route path="/add-business" component={AddBusiness} />
+                <Route path="/create-group" component={CreateGroup} />
 
                 {/* sellers */}
-                <Route exact path="/bids" component={Bids} />
-
-                <Route path="/create-group" component={CreateGroup} />
-                <Route path="/add-business" component={AddBusiness} />
-                <Route path="/order" component={NewOrder} />
+                <Route path="/orders" component={Orders} />
+                <Route path="/search-orders" component={SearchOrders} />
                 <Route path="/bid/:id" component={Bid} />
-                <Route path="/view-order/:id" component={ViewOrder} />
                 <Route path="/view-bid/:id" component={ViewBid} />
-                <Route path="/accept-bid/:id" component={AcceptBid} />
+
+                {/* buyers */}
+                <Route exact path="/bids" component={Bids} />
+                <Route path="/order" component={NewOrder} />
+                <Route path="/view-order/:id" component={ViewOrder} />
               </main>
             </div>
           </Router>

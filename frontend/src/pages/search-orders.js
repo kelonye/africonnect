@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import * as mapDispatchToProps from 'actions';
-import { ordersSelector } from 'selectors';
 import { withStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -12,6 +11,9 @@ import { Link } from 'react-router-dom';
 import Money from 'components/money';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
+import Business from 'components/business';
+import Variety from 'components/variety';
+import OrderTotal from 'components/order-total';
 
 const styles = theme => ({});
 
@@ -54,17 +56,23 @@ class Component extends React.Component {
                 <TableCell component="th" scope="row">
                   #{row.prim_key}
                 </TableCell>
-                <TableCell>{row.business && row.businessObj.name}</TableCell>
-                <TableCell numeric>{row.varietyName}</TableCell>
+                <TableCell>
+                  <Business primKey={row.business} />
+                </TableCell>
+                <TableCell numeric>
+                  <Variety variety={row.variety} />
+                </TableCell>
                 <TableCell numeric>{row.quantity}</TableCell>
                 <TableCell numeric>
                   <Money money={row.budget_unit_price} />
                 </TableCell>
                 <TableCell numeric>
-                  <Money money={row.total_cost} />
+                  <OrderTotal order={row.prim_key} />
                 </TableCell>
                 <TableCell>
-                  <Link to={`/bid/${row.prim_key}`}>BID</Link>
+                  <Link to={`/bid/${row.prim_key}`}>
+                    <Button color="secondary">BID</Button>
+                  </Link>
                 </TableCell>
               </TableRow>
             ))}
@@ -75,11 +83,9 @@ class Component extends React.Component {
   }
 }
 
-Component.propTypes = {};
-
-const mapStateToProps = state => {
+const mapStateToProps = ({ orders }) => {
   return {
-    orders: ordersSelector(state)
+    orders
   };
 };
 

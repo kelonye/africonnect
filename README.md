@@ -14,6 +14,6 @@ SSH into container:
 
     $ make ssh
 
-Compile contract:
+Compile contract (inside the container):
 
-    $ make
+    $ ./scripts/deploy_contract.sh zebra zebrauser zebrawal

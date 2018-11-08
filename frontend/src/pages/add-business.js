@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { USER, pushAction } from 'eos';
 import Button from '@material-ui/core/Button';
 import FormControl from '@material-ui/core/FormControl';
@@ -36,11 +35,7 @@ class Component extends React.Component {
       _physical_address
     })
       .then(getBusinesses)
-      .then(() => {
-        history.replace({
-          pathname: '/'
-        });
-      });
+      .then(() => history.replace({ pathname: '/' }));
   }
 
   render() {
@@ -81,9 +76,5 @@ class Component extends React.Component {
     );
   }
 }
-
-Component.propTypes = {
-  classes: PropTypes.object.isRequired
-};
 
 export default withStyles(styles)(Component);

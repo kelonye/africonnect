@@ -54,7 +54,7 @@ class Component extends React.Component {
                 <TableCell numeric>{row.reputation}</TableCell>
                 <TableCell>
                   <Link to={`/group/${row.prim_key}`}>
-                    <Button color="secondary">VIEW</Button>
+                    <Button color="secondary">EDIT</Button>
                   </Link>
                 </TableCell>
               </TableRow>
@@ -65,8 +65,6 @@ class Component extends React.Component {
     );
   }
 }
-
-Component.propTypes = {};
 
 const mapStateToProps = state => {
   return {

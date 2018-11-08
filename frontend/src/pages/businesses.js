@@ -50,7 +50,7 @@ class Component extends React.Component {
                 </TableCell>
                 <TableCell>
                   <Link to={`/business/${row.prim_key}`}>
-                    <Button color="secondary">VIEW</Button>
+                    <Button color="secondary">EDIT</Button>
                   </Link>
                 </TableCell>
               </TableRow>
@@ -61,8 +61,6 @@ class Component extends React.Component {
     );
   }
 }
-
-Component.propTypes = {};
 
 const mapStateToProps = state => {
   return {

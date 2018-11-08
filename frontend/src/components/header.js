@@ -86,12 +86,7 @@ class Component extends React.Component {
             AFRICONNECT
           </Typography>
 
-          <Typography
-            component="h6"
-            variant="subheading"
-            color="inherit"
-            noWrap
-          >
+          <Typography component="h6" variant="subtitle1" color="inherit" noWrap>
             {USER.name}
             &nbsp; &nbsp;
             <Money

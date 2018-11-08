@@ -9,9 +9,13 @@ import FormControl from '@material-ui/core/FormControl';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import withStyles from '@material-ui/core/styles/withStyles';
-import { myGroupsSelector, getOrderByKey } from 'selectors';
+import { myGroupsSelector } from 'selectors';
+import { getOrderByKey } from 'utils';
 import Money from 'components/money';
 import Typography from '@material-ui/core/Typography';
+import Business from 'components/business';
+import Variety from 'components/variety';
+import OrderTotal from 'components/order-total';
 
 const styles = theme => ({
   paper: {
@@ -74,14 +78,14 @@ class Component extends React.Component {
           <div>
             <Typography variant="h6" style={{ color: 'gray' }} component="h2">
               Bid on Order: variety(
-              {order.varietyName}
+              <Variety variety={order.variety} />
               ), unit price(
               <Money money={order.budget_unit_price} />
               ), total(
-              <Money money={order.total_cost} />)
+              <OrderTotal order={order.prim_key} />)
             </Typography>
             <h5 style={{ margin: 0 }}>
-              Requested by: {order.businessObj.name}
+              Requested by: <Business primKey={order.business} />
             </h5>
           </div>
         )}
@@ -125,7 +129,7 @@ class Component extends React.Component {
 const mapStateToProps = (state, ownProps) => {
   return {
     groups: myGroupsSelector(state),
-    order: getOrderByKey(Number(ownProps.match.params.id))
+    order: getOrderByKey(state, Number(ownProps.match.params.id))
   };
 };
 
